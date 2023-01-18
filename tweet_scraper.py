@@ -84,7 +84,7 @@ def scrape_data(lang, list_time):
         search_quote = '\s since_time:' + str(list_time[i]) + ' until_time:' + str(list_time[i+1]) + ' filter:safe lang:' + lang
 
         for tweet in (sntwitter.TwitterSearchScraper(search_quote).get_items()):
-            print("\t" + search_quote)
+            print("\t" + tweet.rawContent)
             cur_file.write(str(tweet.date) + "\t" + tweet.rawContent + "\n")
             tweet_df.loc[len(tweet_df)] = [tweet.date, tweet.rawContent]
             break
