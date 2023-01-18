@@ -1,7 +1,6 @@
 import time
 import datetime
 import snscrape.modules.twitter as sntwitter
-import numpy as np
 import pandas as pd
 import re
 from konlpy.tag import Okt
@@ -28,16 +27,14 @@ def generate_dates(year, date_only):
         return dates_tuple
 
 # Generate integer unix time list
-def generate_times(start_time, end_time, duration):
+def generate_times(start_time, end_time):
     start_unix = int(time.mktime(start_time.timetuple()))
     end_unix = int(time.mktime(end_time.timetuple()))
 
-    list_time = np.arange(start_unix, end_unix, duration).tolist()
+    list_time = []
 
-    #list_time = []
-
-    #for t in range(start_unix, end_unix):
-    #    list_time.append(t)
+    for t in range(start_unix, end_unix):
+        list_time.append(t)        
 
     return list_time
 
@@ -79,12 +76,10 @@ def scrape_data(lang, list_time):
             file_name = lang + '_' + date
 
             cur_file = open(tweet_directory + 'txt/' + file_name + '.txt', 'w')
-            print("Opening file for " + date)
 
         search_quote = '\s since_time:' + str(list_time[i]) + ' until_time:' + str(list_time[i+1]) + ' filter:safe lang:' + lang
 
         for tweet in (sntwitter.TwitterSearchScraper(search_quote).get_items()):
-            print("\t" + search_quote)
             cur_file.write(str(tweet.date) + "\t" + tweet.rawContent + "\n")
             tweet_df.loc[len(tweet_df)] = [tweet.date, tweet.rawContent]
             break
@@ -127,9 +122,7 @@ def process_csv(lang, date):
 start_time = datetime.datetime(2019, 1, 1, 0, 0) 
 end_time = datetime.datetime(2020, 1, 1, 0, 0)
 
-list_time = generate_times(start_time, end_time, 5)
-print("Time list generated")
-
+list_time = generate_times(start_time, end_time)
 scrape_data('en', list_time)
 
 #half_point = int(len(dates_list) / 2)

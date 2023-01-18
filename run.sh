@@ -11,4 +11,4 @@
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64/
 
 cd translate_neolog
-python general.py
+python tweet_scraper.py
